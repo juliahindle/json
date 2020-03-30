@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Set List</h2>
+
+<!-- <select id="myselect" onchange="change_myselect(this.value)">
+  <option value="">Choose an option:</option>
+  <option value="customers">Customers</option>
+  <option value="products">Products</option>
+  <option value="suppliers">Suppliers</option>
+</select> -->
+
+<p id="output"></p>
+
+<script>
+var obj, dbParam, request, json_data, x, txt = "";
+
+request = new XMLHttpRequest();
+request.onreadystatechange = function() 
+{
+	if (this.readyState == 4 && this.status == 200) 
+	{
+		json_data = JSON.parse(this.responseText);
+		txt += ""
+		for (x in json_data) 
+		{
+			txt += "<p>" + json_data[x].title + "<p>";
+		}   
+		document.getElementById("output").innerHTML = txt;
+	}
+};
+request.open("GET", "data.json", true);
+request.send("x=" + dbParam);
+
+
+
+
+
+// function change_myselect(sel) 
+// {
+// 	var obj, dbParam, request, json_data, x, txt = "";
+// 	// obj = { table: sel, limit: 20 };
+// 	// dbParam = JSON.stringify(obj);
+// 	request = new XMLHttpRequest();
+// 	request.onreadystatechange = function() 
+// 	{
+// 		// if (this.readyState == 4 && this.status == 200) 
+// 		// {
+// 		json_data = JSON.parse(this.responseText);
+// 		txt += "<table border='1'>"
+// 		for (x in json_data) 
+// 		{
+// 			txt += "<tr><td>" + json_data[x].name + "</td></tr>";
+// 		}
+// 		txt += "</table>"    
+// 		document.getElementById("demo").innerHTML = txt;
+// 		// }
+// 	};
+// 	request.open("GET", "data.json", true);
+// 	request.send("x=" + dbParam);
+	
+// }
+</script>
+
+</body>
+</html>
