@@ -1,66 +1,214 @@
 <!DOCTYPE html>
 <html>
+<style>
+body
+{
+	background: #EAE4DC;
+	margin-left: 30px;
+	margin-bottom: 30px;
+}
+
+h1
+{
+	color: #E65154;
+	font-size: 5em;
+	margin-top: 20px;
+	margin-bottom: 10px;
+}
+
+select
+{
+	background-color: #F5ABA8;
+  color: white;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  width: 250px; 
+  text-align-last:center;
+}
+
+input
+{
+	background-color: #F5ABA8;
+	border: none;
+  color: white;
+  padding: 13px 30px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 18px;
+  margin-top: 10px;
+}
+
+select:hover, input:hover
+{
+	background-color: #E65154;
+}
+
+.title 
+{
+	color: #E65154;
+	padding-top: 20px;
+	font-size: 22px;
+	font-weight: bold;
+	margin-bottom: 6px;
+}
+
+.artist, .genre, .year
+{
+	color: #D37979;
+	font-size: 17px;
+	letter-spacing: 0.01em;
+}
+
+</style>
+
 <body>
 
-<h2>Set List</h2>
+<h1>Set List</h1>
 
-<!-- <select id="myselect" onchange="change_myselect(this.value)">
-  <option value="">Choose an option:</option>
-  <option value="customers">Customers</option>
-  <option value="products">Products</option>
-  <option value="suppliers">Suppliers</option>
-</select> -->
+<div>
+	<select id="myselect">
+		<option value="">---- CHOOSE AN OPTION ----</option>
+		<option value="Alternative">Alternative</option>
+		<option value="Dance">Dance</option>
+		<option value="Disco">Disco</option>
+		<option value="Electronic">Electronic</option>
+		<option value="Hip-Hop">Hip-Hop</option>
+		<option value="R&B">R&amp;B</option>
+		<option value="Rap">Rap</option>
+		<option value="Soul">Soul</option>
+	</select>
+</div>
+<div>
+	<input type="button" value = "Filter" onclick ="filter_by(myselect.value)">
+</div>
 
 <p id="output"></p>
 
-<script>
-var obj, dbParam, request, json_data, x, txt = "";
+<script language="javascript">
+// creation of json data
+var raw_data = 
+	[{ 
+		"title": "I Wish", 
+		"artist": ["Skee Lo"],
+    "genre": ["Hip-Hop", "Rap"],
+    "year": 1995
+	}, 
+	{ 
+		"title": "Supalonely",
+    "artist": ["BENEE", "Gus Dapperton"], 
+    "genre": ["Alternative", "Indie"],
+    "year": 2019
+	},
+	{ 
+		"title": "Coming Home",
+    "artist": ["Leon Bridges"], 
+    "genre": ["R&B", "Soul"],
+    "year": 2015
+	}, 
+	{ 
+		"title": "Electric Feel",
+    "artist": ["MGMT"], 
+    "genre": ["Dance", "Electronic"],
+    "year": 2007
+	}, 
+	{ 
+		"title": "Put Me Thru",
+	    "artist": ["Anderson .Paak"], 
+	    "genre": ["R&B", "Soul"],
+	    "year": 2016
+	}, 
+	{ 
+		"title": "September",
+    "artist": ["Earth, Wind & Fire"], 
+    "genre": ["Disco"],
+    "year": 1978
+	}, 
+	{ 
+		"title": "Blu",
+    "artist": ["Elujay"], 
+    "genre": ["R&B", "Soul"],
+    "year": 2018
+	}, 
+	{ 
+		"title": "Wait a Minute!",
+    "artist": ["WILLOW"], 
+    "genre": ["Alternative", "Indie"],
+    "year": 2015
+	}, 
+	{ 
+		"title": "Toothache",
+    "artist": ["Topaz Jones"], 
+    "genre": ["Hip-Hop", "Rap"],
+    "year": 2018
+	}, 
+	{ 
+		"title": "Alright",
+    "artist": ["Kris Kross"], 
+    "genre": ["Hip-Hop", "Rap"],
+    "year": 1993
+	}, 
+	{ 
+		"title": "Treasure",
+    "artist": ["Bruno Mars"], 
+    "genre": ["Dance", "Disco"],
+    "year": 2012
+	}];
 
-request = new XMLHttpRequest();
-request.onreadystatechange = function() 
+var data = JSON.stringify(raw_data);
+var json_data = JSON.parse(data);
+var txt = "";
+
+for (i in json_data)
 {
-	if (this.readyState == 4 && this.status == 200) 
+	txt += output_song(json_data[i]);
+}
+
+// initial output of all songs
+document.getElementById("output").innerHTML = txt;
+
+// function for filtering list on button click
+function filter_by(sel) 
+{
+	var txt = "";
+
+	if (sel == "")
 	{
-		json_data = JSON.parse(this.responseText);
-		txt += ""
-		for (x in json_data) 
+		for (i in json_data)
 		{
-			txt += "<p>" + json_data[x].title + "<p>";
-		}   
-		document.getElementById("output").innerHTML = txt;
+			txt += output_song(json_data[i]);
+		}
 	}
-};
-request.open("GET", "data.json", true);
-request.send("x=" + dbParam);
+	else
+	{
+		for (i in json_data)
+		{
+			for (j in json_data[i].genre)
+			{
+				if (json_data[i].genre[j] == sel)
+					txt += output_song(json_data[i]);
+			}
+		}
+	}
+	document.getElementById("output").innerHTML = txt;
+}
 
+// function for outputting each song
+function output_song(song)
+{
+	var temp = "";
+	// title
+	temp += "<p class = 'title'>" + json_data[i].title + "</p>";
+	// artist
+	temp += "<p class = 'artist'>Artist(s): " + json_data[i].artist.join(', ') + "</p>";
+	// genre
+	temp += "<p class = 'genre'>Genre(s): " + json_data[i].genre.join(', ') + "</p>";
+	// year
+	temp += "<p class = 'year'>Year: " + json_data[i].artist + "</p>";
+	return temp
+}
 
-
-
-
-// function change_myselect(sel) 
-// {
-// 	var obj, dbParam, request, json_data, x, txt = "";
-// 	// obj = { table: sel, limit: 20 };
-// 	// dbParam = JSON.stringify(obj);
-// 	request = new XMLHttpRequest();
-// 	request.onreadystatechange = function() 
-// 	{
-// 		// if (this.readyState == 4 && this.status == 200) 
-// 		// {
-// 		json_data = JSON.parse(this.responseText);
-// 		txt += "<table border='1'>"
-// 		for (x in json_data) 
-// 		{
-// 			txt += "<tr><td>" + json_data[x].name + "</td></tr>";
-// 		}
-// 		txt += "</table>"    
-// 		document.getElementById("demo").innerHTML = txt;
-// 		// }
-// 	};
-// 	request.open("GET", "data.json", true);
-// 	request.send("x=" + dbParam);
-	
-// }
 </script>
 
 </body>
